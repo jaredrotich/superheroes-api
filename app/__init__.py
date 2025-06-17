@@ -1,9 +1,7 @@
-from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
 
-db = SQLAlchemy()
-migrate = Migrate()
+from flask import Flask
+from .extensions import db, migrate
+from .routes import api
 
 def create_app():
     app = Flask(__name__)
@@ -14,9 +12,8 @@ def create_app():
     db.init_app(app)
     migrate.init_app(app, db)
 
-    from .routes import api
-    app.register_blueprint(api)
-    
-    from . import models
+    app.register_blueprint(api, url_prefix="/")
+
+    from . import models  
 
     return app
